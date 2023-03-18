@@ -130,4 +130,53 @@ public class ProductManagerTest {
         Assertions.assertArrayEquals(expected, actual);
 
     }
+
+    @Test
+    public void shouldRemoveByIncorrectIdProduct() {
+        repo.save(book1);
+        repo.save(book2);
+        repo.save(smartphone1);
+        repo.save(smartphone2);
+        repo.save(smartphone3);
+
+
+        Assertions.assertThrows(NotFoundException.class, () -> {
+            repo.removeById(8);
+        });
+    }
+
+    @Test
+    public void shouldRemoveByCorrectIdProduct() {
+        repo.save(book1);
+        repo.save(book2);
+        repo.save(smartphone1);
+        repo.save(smartphone2);
+        repo.save(smartphone3);
+
+        repo.removeById(222);
+
+        Product[] actual = {book1, book2, smartphone1, smartphone3};
+        Product[] expected = repo.findAll();
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldAddIdProduct() {
+        repo.save(smartphone3);
+
+        Product[] actual = {smartphone3};
+        Product[] expected = repo.findAll();
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldAddAlreadyExistsIdProduct() {
+        repo.save(smartphone2);
+
+        Assertions.assertThrows(AlreadyExistsException.class, () -> {
+            repo.save(smartphone2);
+        });
+    }
 }
